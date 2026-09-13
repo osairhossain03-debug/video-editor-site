@@ -1,0 +1,13 @@
+[
+  { "id": 1, "category": "Video Editing", "title": "Video Project 01", "description": "Professional video edit from raw footage.", "videoUrl": "" },
+  { "id": 2, "category": "Video Editing", "title": "Video Project 02", "description": "Clean pacing, cuts and visual storytelling.", "videoUrl": "" },
+  { "id": 3, "category": "Video Editing", "title": "Video Project 03", "description": "Edited footage with polished presentation.", "videoUrl": "" },
+  { "id": 4, "category": "Video Editing", "title": "Video Project 04", "description": "Engaging edit with smooth transitions and timing.", "videoUrl": "" },
+  { "id": 5, "category": "Video Editing", "title": "Video Project 05", "description": "Professional edit prepared for portfolio viewing.", "videoUrl": "" },
+  { "id": 6, "category": "Video Editing", "title": "Video Project 06", "description": "Story-focused editing with refined pacing.", "videoUrl": "" },
+  { "id": 7, "category": "Video Editing", "title": "Video Project 07", "description": "Creative video editing from original footage.", "videoUrl": "" },
+  { "id": 8, "category": "Video Editing", "title": "Video Project 08", "description": "Polished footage with a clean final presentation.", "videoUrl": "" },
+  { "id": 9, "category": "Video Editing", "title": "Video Project 09", "description": "Dynamic editing designed for online audiences.", "videoUrl": "" },
+  { "id": 10, "category": "Video Editing", "title": "Video Project 10", "description": "Professional post-production and finishing.", "videoUrl": "" },
+  { "id": 11, "category": "Video Editing", "title": "Video Project 11", "description": "Final edited video for portfolio showcase.", "videoUrl": "" }
+]

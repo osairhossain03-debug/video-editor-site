@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osair Hossain — Video Editor</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--bg:#F5F7FF;
+--bg-soft:#EEF1FF;
+--bg-card:rgba(255,255,255,.82);
+--bg-dark:#12111A;
+
+--text:#15141B;
+--text-muted:#686777;
+--text-faint:#9896A5;
+
+--line:rgba(120,116,160,.16);
+
+--violet:#7057F7;
+--blue:#3EA8F5;
+--coral:#FF6B5B;
+--gold:#FFB648;
+--green:#37C871;
+
+--grad:linear-gradient(135deg,#7057F7,#3EA8F5);
+--grad-warm:linear-gradient(135deg,#FF6B5B,#FFB648);
+
+--radius:20px;
+}
+
+*{
+box-sizing:border-box;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+margin:0;
+color:var(--text);
+font-family:'Inter',sans-serif;
+line-height:1.55;
+
+/* New softer background */
+background:
+radial-gradient(circle at 5% 5%,rgba(112,87,247,.13),transparent 28%),
+radial-gradient(circle at 95% 10%,rgba(62,168,245,.12),transparent 25%),
+radial-gradient(circle at 50% 100%,rgba(255,182,72,.10),transparent 30%),
+var(--bg);
+
+-webkit-font-smoothing:antialiased;
+}
+
+a{
+color:inherit;
+}
+
+h1,h2,h3{
+font-family:'Space Grotesk',sans-serif;
+}
+
+.wrap{
+max-width:1160px;
+margin:0 auto;
+padding:0 28px;
+}
+
+/* ================= NAV ================= */
+
+header.site{
+position:sticky;
+top:0;
+z-index:60;
+background:rgba(245,247,255,.78);
+backdrop-filter:blur(16px);
+border-bottom:1px solid var(--line);
+}
+
+nav{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:18px 0;
+}
+
+.brand{
+font-weight:700;
+font-size:18px;
+letter-spacing:-.02em;
+}
+
+.navlinks{
+display:flex;
+align-items:center;
+gap:28px;
+font-size:14px;
+color:var(--text-muted);
+}
+
+.navlinks a{
+text-decoration:none;
+font-weight:500;
+transition:.2s;
+}
+
+.navlinks a:hover{
+color:var(--violet);
+}
+
+.nav-cta{
+background:var(--text);
+color:#fff!important;
+padding:10px 20px;
+border-radius:100px;
+font-weight:600!important;
+}
+
+.nav-cta:hover{
+background:var(--violet);
+transform:translateY(-1px);
+}
+
+@media(max-width:760px){
+.navlinks a:not(.nav-cta){
+display:none;
+}
+}
+
+/* ================= HERO ================= */
+
+.hero{
+padding:72px 0 90px;
+position:relative;
+overflow:hidden;
+text-align:center;
+}
+
+.blob{
+position:absolute;
+border-radius:50%;
+filter:blur(80px);
+opacity:.25;
+z-index:0;
+}
+
+.blob-1{
+width:420px;
+height:420px;
+background:var(--violet);
+top:-180px;
+left:-100px;
+}
+
+.blob-2{
+width:360px;
+height:360px;
+background:var(--gold);
+top:-40px;
+right:-140px;
+}
+
+.hero-inner{
+position:relative;
+z-index:1;
+}
+
+.badge-pill{
+display:inline-flex;
+align-items:center;
+gap:8px;
+background:rgba(255,255,255,.75);
+border:1px solid var(--line);
+padding:7px 16px 7px 10px;
+border-radius:100px;
+font-size:13px;
+color:var(--text-muted);
+font-weight:500;
+margin-bottom:26px;
+box-shadow:0 8px 25px rgba(40,35,90,.06);
+}
+
+.avail-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:var(--green);
+box-shadow:0 0 0 5px rgba(55,200,113,.12);
+}
+
+h1.hero-title{
+font-weight:700;
+font-size:clamp(36px,6vw,60px);
+line-height:1.06;
+letter-spacing:-.035em;
+margin:0 auto 20px;
+max-width:800px;
+}
+
+.hero-title .highlight{
+background:var(--grad);
+-webkit-background-clip:text;
+background-clip:text;
+color:transparent;
+}
+
+.hero-sub{
+font-size:17px;
+color:var(--text-muted);
+max-width:550px;
+margin:0 auto 34px;
+}
+
+.hero-actions{
+display:flex;
+gap:14px;
+justify-content:center;
+flex-wrap:wrap;
+margin-bottom:56px;
+}
+
+.btn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+gap:9px;
+padding:15px 26px;
+border-radius:100px;
+font-size:15px;
+font-weight:600;
+text-decoration:none;
+cursor:pointer;
+border:1px solid transparent;
+transition:.2s;
+}
+
+.btn-primary{
+background:var(--grad);
+color:#fff;
+box-shadow:0 14px 30px rgba(112,87,247,.28);
+}
+
+.btn-primary:hover{
+transform:translateY(-3px);
+box-shadow:0 20px 40px rgba(112,87,247,.35);
+}
+
+.btn-ghost{
+border-color:var(--line);
+color:var(--text);
+background:rgba(255,255,255,.75);
+}
+
+.btn-ghost:hover{
+transform:translateY(-3px);
+background:#fff;
+}
+
+/* ================= SHOWCASE ================= */
+
+.showcase{
+position:relative;
+max-width:920px;
+margin:0 auto;
+border-radius:26px;
+overflow:visible;
+box-shadow:0 40px 90px rgba(35,30,80,.18);
+}
+
+.showcase-screen{
+aspect-ratio:16/8;
+position:relative;
+background:
+radial-gradient(90% 120% at 15% 15%,rgba(112,87,247,.7),transparent 55%),
+radial-gradient(90% 120% at 88% 90%,rgba(255,182,72,.55),transparent 55%),
+linear-gradient(160deg,#30275B,#16132E);
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:26px 26px 0 0;
+overflow:hidden;
+}
+
+.showcase-screen::after{
+content:"";
+position:absolute;
+inset:0;
+background:
+linear-gradient(120deg,transparent 30%,rgba(255,255,255,.08),transparent 70%);
+animation:shine 6s infinite;
+}
+
+@keyframes shine{
+0%,60%{transform:translateX(-100%)}
+100%{transform:translateX(100%)}
+}
+
+.play-btn{
+width:78px;
+height:78px;
+border-radius:50%;
+background:rgba(255,255,255,.16);
+border:1px solid rgba(255,255,255,.45);
+backdrop-filter:blur(8px);
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+transition:.25s;
+z-index:2;
+}
+
+.play-btn:hover{
+transform:scale(1.1);
+background:rgba(255,255,255,.25);
+}
+
+.showcase-chip{
+position:absolute;
+top:18px;
+left:18px;
+background:rgba(0,0,0,.38);
+color:#fff;
+font-size:12px;
+padding:6px 12px;
+border-radius:100px;
+z-index:2;
+}
+
+.showcase-bar{
+background:rgba(255,255,255,.96);
+padding:17px 22px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:16px;
+border-radius:0 0 26px 26px;
+}
+
+.showcase-bar .title{
+font-size:14px;
+font-weight:600;
+}
+
+.showcase-bar .sub{
+font-size:12px;
+color:var(--text-muted);
+}
+
+.showcase-progress{
+flex:1;
+height:4px;
+background:var(--line);
+border-radius:2px;
+margin:0 18px;
+max-width:220px;
+}
+
+.showcase-progress .fill{
+height:100%;
+width:44%;
+background:var(--grad);
+border-radius:2px;
+}
+
+.float-card{
+position:absolute;
+background:#fff;
+border-radius:14px;
+padding:11px 16px;
+box-shadow:0 18px 35px rgba(20,20,30,.15);
+display:flex;
+align-items:center;
+gap:10px;
+font-size:13px;
+font-weight:600;
+z-index:5;
+}
+
+.float-card.f1{
+top:20px;
+right:-18px;
+}
+
+.float-card.f2{
+bottom:70px;
+left:-18px;
+}
+
+.dot-ic{
+width:32px;
+height:32px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+font-size:12px;
+}
+
+@media(max-width:760px){
+.float-card{
+display:none;
+}
+}
+
+/* ================= TRUST ================= */
+
+.trust{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:10px;
+margin-top:56px;
+}
+
+.trust span{
+font-size:13px;
+font-weight:600;
+color:var(--text-muted);
+background:rgba(255,255,255,.7);
+border:1px solid var(--line);
+padding:8px 16px;
+border-radius:100px;
+}
+
+/* ================= SECTIONS ================= */
+
+.section{
+padding:96px 0;
+}
+
+.section.soft{
+background:rgba(238,241,255,.62);
+border-top:1px solid rgba(120,116,160,.08);
+border-bottom:1px solid rgba(120,116,160,.08);
+}
+
+.section-head{
+display:flex;
+justify-content:space-between;
+align-items:flex-end;
+gap:24px;
+margin-bottom:48px;
+flex-wrap:wrap;
+}
+
+.eyebrow{
+font-size:13px;
+font-weight:600;
+color:var(--violet);
+text-transform:uppercase;
+letter-spacing:.07em;
+margin:0 0 10px;
+}
+
+h2.section-title{
+font-weight:700;
+font-size:clamp(28px,3.6vw,38px);
+letter-spacing:-.025em;
+margin:0;
+}
+
+.section-note{
+font-size:14.5px;
+color:var(--text-muted);
+max-width:320px;
+}
+
+/* ================= PORTFOLIO ================= */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:24px;
+}
+
+.clip{
+background:var(--bg-card);
+backdrop-filter:blur(10px);
+border:1px solid var(--line);
+border-radius:var(--radius);
+overflow:hidden;
+transition:.25s;
+}
+
+.clip:hover{
+transform:translateY(-7px);
+box-shadow:0 25px 50px rgba(30,25,70,.12);
+}
+
+.clip-thumb{
+aspect-ratio:16/10;
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.clip-thumb .play{
+width:46px;
+height:46px;
+border-radius:50%;
+background:rgba(255,255,255,.9);
+display:flex;
+align-items:center;
+justify-content:center;
+opacity:0;
+transform:scale(.85);
+transition:.2s;
+}
+
+.clip:hover .play{
+opacity:1;
+transform:scale(1);
+}
+
+.clip-dur{
+position:absolute;
+bottom:10px;
+right:10px;
+font-size:11px;
+font-weight:600;
+background:rgba(0,0,0,.55);
+color:#fff;
+padding:3px 8px;
+border-radius:100px;
+}
+
+.clip-body{
+padding:19px;
+}
+
+.clip-cat{
+font-size:12px;
+font-weight:600;
+color:var(--violet);
+margin:0 0 7px;
+}
+
+.clip-title{
+font-size:16px;
+font-weight:700;
+margin:0 0 5px;
+}
+
+.clip-desc{
+font-size:13.5px;
+color:var(--text-muted);
+margin:0;
+}
+.clip-thumb video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+@media(max-width:900px){
+.grid{
+grid-template-columns:repeat(2,1fr);
+}
+}
+
+@media(max-width:600px){
+.grid{
+grid-template-columns:1fr;
+}
+}
+
+/* ================= SERVICES ================= */
+
+.services{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+.service{
+background:rgba(255,255,255,.78);
+backdrop-filter:blur(10px);
+border:1px solid var(--line);
+border-radius:var(--radius);
+padding:30px 24px;
+transition:.2s;
+}
+
+.service:hover{
+transform:translateY(-5px);
+box-shadow:0 20px 40px rgba(30,25,70,.1);
+}
+
+.service .ic{
+width:44px;
+height:44px;
+border-radius:13px;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-bottom:18px;
+}
+
+.ic-1{
+background:linear-gradient(135deg,#EDE9FF,#DCEBFF);
+}
+
+.ic-2{
+background:linear-gradient(135deg,#FFE9E4,#FFF1D6);
+}
+
+.ic-3{
+background:linear-gradient(135deg,#E3F8EE,#DCEBFF);
+}
+
+.service h3{
+font-size:18px;
+margin:0 0 8px;
+}
+
+.service p{
+font-size:13.5px;
+color:var(--text-muted);
+margin:0;
+}
+
+@media(max-width:760px){
+.services{
+grid-template-columns:1fr;
+}
+}
+
+/* ================= ORDER SECTION ================= */
+
+.order-section{
+background:
+radial-gradient(circle at 10% 20%,rgba(112,87,247,.15),transparent 30%),
+radial-gradient(circle at 90% 80%,rgba(62,168,245,.15),transparent 30%);
+}
+
+.order-box{
+display:grid;
+grid-template-columns:1fr 1.15fr;
+gap:50px;
+align-items:center;
+}
+
+.order-copy h2{
+font-size:clamp(30px,4vw,44px);
+line-height:1.1;
+margin:0 0 16px;
+letter-spacing:-.03em;
+}
+
+.order-copy p{
+color:var(--text-muted);
+max-width:450px;
+}
+
+.order-points{
+list-style:none;
+padding:0;
+margin:28px 0 0;
+}
+
+.order-points li{
+margin:12px 0;
+font-size:14px;
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.order-points li span{
+width:22px;
+height:22px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+background:#E3F8EE;
+color:var(--green);
+font-weight:700;
+font-size:11px;
+}
+
+.order-form{
+background:rgba(255,255,255,.9);
+border:1px solid var(--line);
+border-radius:24px;
+padding:30px;
+box-shadow:0 25px 60px rgba(30,25,70,.1);
+}
+
+.form-title{
+font-family:'Space Grotesk';
+font-size:20px;
+font-weight:700;
+margin-bottom:22px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+}
+
+.form-group{
+margin-bottom:14px;
+}
+
+.form-group.full{
+grid-column:1/-1;
+}
+
+.form-group label{
+display:block;
+font-size:12px;
+font-weight:600;
+margin-bottom:7px;
+color:var(--text-muted);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+width:100%;
+border:1px solid var(--line);
+background:#FAFAFD;
+border-radius:11px;
+padding:12px 13px;
+font-family:Inter,sans-serif;
+font-size:13px;
+outline:none;
+transition:.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+border-color:var(--violet);
+box-shadow:0 0 0 3px rgba(112,87,247,.1);
+}
+
+.form-group textarea{
+min-height:105px;
+resize:vertical;
+}
+
+.order-submit{
+width:100%;
+border:0;
+cursor:pointer;
+margin-top:5px;
+}
+
+@media(max-width:800px){
+.order-box{
+grid-template-columns:1fr;
+}
+}
+
+@media(max-width:550px){
+.form-grid{
+grid-template-columns:1fr;
+}
+
+.form-group.full{
+grid-column:auto;
+}
+}
+
+/* ================= PROCESS ================= */
+
+.process{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
+}
+
+.step{
+background:rgba(255,255,255,.78);
+border:1px solid var(--line);
+border-radius:14px;
+padding:22px 18px;
+}
+
+.step-num{
+font-family:'Space Grotesk';
+font-weight:700;
+font-size:13px;
+color:#fff;
+background:var(--grad);
+width:28px;
+height:28px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-bottom:14px;
+}
+
+.step h3{
+font-size:15.5px;
+margin:0 0 6px;
+}
+
+.step p{
+font-size:13px;
+color:var(--text-muted);
+margin:0;
+}
+
+@media(max-width:860px){
+.process{
+grid-template-columns:1fr 1fr;
+}
+}
+
+@media(max-width:560px){
+.process{
+grid-template-columns:1fr;
+}
+}
+
+/* ================= REVIEWS ================= */
+
+.reviews{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+.review{
+background:rgba(255,255,255,.82);
+border:1px solid var(--line);
+border-radius:20px;
+padding:25px;
+transition:.2s;
+}
+
+.review:hover{
+transform:translateY(-4px);
+box-shadow:0 18px 35px rgba(30,25,70,.09);
+}
+
+.stars{
+color:#FFB648;
+letter-spacing:2px;
+font-size:15px;
+margin-bottom:15px;
+}
+
+.review-text{
+font-size:14px;
+line-height:1.7;
+color:#484652;
+margin:0 0 20px;
+}
+
+.reviewer{
+display:flex;
+align-items:center;
+gap:11px;
+}
+
+.reviewer-avatar{
+width:40px;
+height:40px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+font-size:12px;
+font-weight:700;
+background:var(--grad);
+}
+
+.reviewer-name{
+font-size:13px;
+font-weight:700;
+}
+
+.reviewer-role{
+font-size:11.5px;
+color:var(--text-faint);
+}
+
+@media(max-width:800px){
+.reviews{
+grid-template-columns:1fr;
+}
+}
+
+/* ================= COMMENTS PANEL ================= */
+
+.comments-layout{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+}
+
+.comments-intro{
+padding:25px 0;
+}
+
+.comments-intro h2{
+font-size:clamp(28px,4vw,40px);
+margin:0 0 15px;
+letter-spacing:-.03em;
+}
+
+.comments-intro p{
+color:var(--text-muted);
+max-width:470px;
+}
+
+.comment-box{
+background:#fff;
+border:1px solid var(--line);
+border-radius:22px;
+padding:25px;
+box-shadow:0 20px 45px rgba(30,25,70,.08);
+}
+
+.comment{
+display:flex;
+gap:13px;
+padding-bottom:18px;
+margin-bottom:18px;
+border-bottom:1px solid var(--line);
+}
+
+.comment:last-of-type{
+border-bottom:0;
+margin-bottom:0;
+padding-bottom:0;
+}
+
+.comment-avatar{
+flex:none;
+width:38px;
+height:38px;
+border-radius:50%;
+background:var(--grad-warm);
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+font-size:11px;
+font-weight:700;
+}
+
+.comment-name{
+font-size:13px;
+font-weight:700;
+}
+
+.comment-date{
+font-size:10px;
+color:var(--text-faint);
+margin-left:5px;
+}
+
+.comment p{
+font-size:13px;
+color:var(--text-muted);
+margin:4px 0 0;
+}
+
+.comment-form{
+margin-top:22px;
+padding-top:20px;
+border-top:1px solid var(--line);
+}
+
+.comment-form textarea{
+width:100%;
+min-height:85px;
+resize:vertical;
+border:1px solid var(--line);
+border-radius:11px;
+padding:12px;
+font-family:Inter,sans-serif;
+font-size:13px;
+outline:none;
+}
+
+.comment-form textarea:focus{
+border-color:var(--violet);
+}
+
+.comment-actions{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:10px;
+gap:10px;
+}
+
+.comment-note{
+font-size:11px;
+color:var(--text-faint);
+}
+
+.comment-btn{
+border:0;
+cursor:pointer;
+padding:10px 17px;
+border-radius:100px;
+color:#fff;
+background:var(--grad);
+font-weight:600;
+}
+
+@media(max-width:760px){
+.comments-layout{
+grid-template-columns:1fr;
+}
+}
+
+/* ================= CTA ================= */
+
+.contact-banner{
+background:var(--grad);
+border-radius:28px;
+padding:58px 52px;
+color:#fff;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:30px;
+flex-wrap:wrap;
+box-shadow:0 30px 70px rgba(112,87,247,.25);
+}
+
+.contact-banner h2{
+font-size:clamp(25px,3.8vw,35px);
+margin:0 0 8px;
+}
+
+.contact-banner p{
+margin:0;
+opacity:.9;
+font-size:14.5px;
+}
+
+.contact-links{
+display:flex;
+flex-direction:column;
+gap:10px;
+align-items:flex-end;
+}
+
+.contact-links a{
+text-decoration:none;
+color:#fff;
+font-weight:600;
+font-size:15px;
+}
+
+@media(max-width:640px){
+.contact-banner{
+padding:36px 26px;
+}
+
+.contact-links{
+align-items:flex-start;
+}
+}
+
+/* ================= FOOTER ================= */
+
+footer{
+padding:36px 0;
+display:flex;
+justify-content:space-between;
+flex-wrap:wrap;
+gap:12px;
+font-size:13px;
+color:var(--text-faint);
+}
+
+.footer-social{
+display:flex;
+gap:20px;
+}
+
+.footer-social a{
+text-decoration:none;
+color:var(--text-muted);
+}
+
+.footer-social a:hover{
+color:var(--violet);
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:640px){
+
+.wrap{
+padding:0 20px;
+}
+
+.hero{
+padding:55px 0 70px;
+}
+
+.showcase-bar{
+flex-wrap:wrap;
+}
+
+.showcase-progress{
+order:3;
+width:100%;
+max-width:none;
+margin:8px 0 0;
+}
+
+.section{
+padding:72px 0;
+}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= NAV ================= -->
+
+<header class="site">
+<div class="wrap">
+<nav>
+
+<div class="brand">Osair Hossain</div>
+
+<div class="navlinks">
+<a href="#work">Work</a>
+<a href="#services">Services</a>
+<a href="#reviews">Reviews</a>
+<a href="#comments">Feedback</a>
+<a href="#order" class="nav-cta">Order a video →</a>
+</div>
+
+</nav>
+</div>
+</header>
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="wrap hero-inner">
+
+<div class="badge-pill">
+<span class="avail-dot"></span>
+Available for new projects
+</div>
+
+<h1 class="hero-title">
+Video editing that makes your footage
+<span class="highlight">look its best.</span>
+</h1>
+
+<p class="hero-sub">
+I'm Osair Hossain, a video editor creating engaging YouTube videos,
+social content, wedding films, corporate videos and more.
+</p>
+
+<div class="hero-actions">
+
+<a href="#order" class="btn btn-primary">
+Order a project →
+</a>
+
+<a href="#work" class="btn btn-ghost">
+See my work
+</a>
+
+</div>
+
+<div class="showcase">
+
+<div class="float-card f1">
+<div class="dot-ic" style="background:var(--grad-warm);">
+4.9
+</div>
+Client rating
+</div>
+
+<div class="float-card f2">
+<div class="dot-ic" style="background:var(--grad);">
+✓
+</div>
+Delivered on time
+</div>
+
+<div class="showcase-screen">
+
+<div class="showcase-chip">
+Featured edit
+</div>
+
+<div class="play-btn">
+<svg width="20" height="24" viewBox="0 0 20 24">
+<path d="M0 0L20 12L0 24Z" fill="#fff"/>
+</svg>
+</div>
+
+</div>
+
+<div class="showcase-bar">
+
+<div>
+<div class="title">
+Weekly flagship episode
+</div>
+
+<div class="sub">
+YouTube · Long-form · 14:22
+</div>
+</div>
+
+<div class="showcase-progress">
+<div class="fill"></div>
+</div>
+
+</div>
+
+</div>
+
+<div class="trust">
+
+<span>YouTube</span>
+<span>Instagram & TikTok</span>
+<span>Corporate</span>
+<span>Weddings</span>
+<span>Podcasts</span>
+
+</div>
+
+</div>
+</section>
+
+<!-- ================= PORTFOLIO ================= -->
+
+<section class="section" id="work">
+
+<div class="wrap">
+
+<div class="section-head">
+
+<div>
+<p class="eyebrow">Portfolio</p>
+<h2 class="section-title">Recent work</h2>
+</div>
+
+<p class="section-note">
+Long-form, shorts, weddings, corporate and event projects.
+</p>
+
+</div>
+
+<div class="grid" id="portfolio-grid">
+  <p class="section-note">Loading portfolio…</p>
+</div>
+
+</div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+
+<section class="section soft" id="services">
+
+<div class="wrap">
+
+<div class="section-head">
+
+<div>
+<p class="eyebrow">Services</p>
+<h2 class="section-title">What I handle</h2>
+</div>
+
+<p class="section-note">
+Choose a service and send your project details.
+</p>
+
+</div>
+
+<div class="services">
+
+<div class="service">
+
+<div class="ic ic-1">
+✂
+</div>
+
+<h3>Long-form editing</h3>
+
+<p>
+YouTube episodes, interviews and documentaries —
+pacing, b-roll, sound design and color included.
+</p>
+
+</div>
+
+<div class="service">
+
+<div class="ic ic-2">
+▶
+</div>
+
+<h3>Shorts & social cuts</h3>
+
+<p>
+Footage repurposed into vertical shorts and reels
+with captions and platform-friendly pacing.
+</p>
+
+</div>
+
+<div class="service">
+
+<div class="ic ic-3">
+▣
+</div>
+
+<h3>Weddings & corporate</h3>
+
+<p>
+Multicam highlight films and brand videos that
+turn raw event footage into a coherent story.
+</p>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+<!-- ================= PROCESS ================= -->
+
+<section class="section" id="process">
+
+<div class="wrap">
+
+<div class="section-head">
+
+<div>
+<p class="eyebrow">Process</p>
+<h2 class="section-title">How a project runs</h2>
+</div>
+
+<p class="section-note">
+Simple workflow from raw footage to final export.
+</p>
+
+</div>
+
+<div class="process">
+
+<div class="step">
+<div class="step-num">1</div>
+<h3>Brief & footage</h3>
+<p>Raw files and project requirements arrive in a shared folder.</p>
+</div>
+
+<div class="step">
+<div class="step-num">2</div>
+<h3>First cut</h3>
+<p>Full assembly edit prepared for your first review.</p>
+</div>
+
+<div class="step">
+<div class="step-num">3</div>
+<h3>Revisions</h3>
+<p>Two revision rounds included with a focused turnaround.</p>
+</div>
+
+<div class="step">
+<div class="step-num">4</div>
+<h3>Delivery</h3>
+<p>Final video exported for YouTube, Instagram or your required platform.</p>
+</div>
+
+</div>
+
+</div>
+</section>
+
+<!-- ================= REVIEWS ================= -->
+
+<section class="section soft" id="reviews">
+
+<div class="wrap">
+
+<div class="section-head">
+
+<div>
+<p class="eyebrow">Reviews</p>
+<h2 class="section-title">What clients say</h2>
+</div>
+
+<p class="section-note">
+Real feedback matters more than empty marketing claims.
+</p>
+
+</div>
+
+<div class="reviews">
+
+<div class="review">
+
+<div class="stars">
+★★★★★
+</div>
+
+<p class="review-text">
+“Osair understood the pacing immediately. The final
+video felt much more professional without losing the
+original personality of the footage.”
+</p>
+
+<div class="reviewer">
+
+<div class="reviewer-avatar">
+AR
+</div>
+
+<div>
+<div class="reviewer-name">
+Alex Rahman
+</div>
+
+<div class="reviewer-role">
+YouTube Creator
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="review">
+
+<div class="stars">
+★★★★★
+</div>
+
+<p class="review-text">
+“Communication was easy and the turnaround was exactly
+what we needed. The wedding highlight captured the
+emotional moments beautifully.”
+</p>
+
+<div class="reviewer">
+
+<div class="reviewer-avatar">
+SM
+</div>
+
+<div>
+<div class="reviewer-name">
+Sarah & Michael
+</div>
+
+<div class="reviewer-role">
+Wedding Client
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="review">
+
+<div class="stars">
+★★★★★
+</div>
+
+<p class="review-text">
+“The short-form edits were exactly what we were looking
+for. Strong hooks, clean captions and much better
+retention compared with our old edits.”
+</p>
+
+<div class="reviewer">
+
+<div class="reviewer-avatar">
+DK
+</div>
+
+<div>
+<div class="reviewer-name">
+Daniel Kim
+</div>
+
+<div class="reviewer-role">
+Content Creator
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+<!-- ================= ORDER ================= -->
+
+<section class="section order-section" id="order">
+
+<div class="wrap">
+
+<div class="order-box">
+
+<div class="order-copy">
+
+<p class="eyebrow">
+Start a project
+</p>
+
+<h2>
+Ready to turn your footage into something people want to watch?
+</h2>
+
+<p>
+Send the basic details below. I'll review the project
+requirements and get back to you with the next steps.
+</p>
+
+<ul class="order-points">
+
+<li>
+<span>✓</span>
+YouTube & long-form editing
+</li>
+
+<li>
+<span>✓</span>
+Shorts, Reels & TikTok
+</li>
+
+<li>
+<span>✓</span>
+Wedding & event films
+</li>
+
+<li>
+<span>✓</span>
+Corporate & promotional videos
+</li>
+
+</ul>
+
+</div>
+
+<div class="order-form">
+
+<div class="form-title">
+Project request
+</div>
+
+<form id="order-form">
+
+<!-- honeypot: hidden from real visitors, often filled in by bots -->
+<input type="text" name="website" style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
+
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>Your name</label>
+
+<input
+type="text"
+name="name"
+placeholder="Your name"
+required>
+
+</div>
+
+<div class="form-group">
+
+<label>Email</label>
+
+<input
+type="email"
+name="email"
+placeholder="you@example.com"
+required>
+
+</div>
+
+<div class="form-group full">
+
+<label>What do you need?</label>
+
+<select name="service" required>
+
+<option value="">
+Select a service
+</option>
+
+<option>
+YouTube / Long-form
+</option>
+
+<option>
+Shorts / Reels
+</option>
+
+<option>
+Wedding Film
+</option>
+
+<option>
+Corporate Video
+</option>
+
+<option>
+Podcast Editing
+</option>
+
+</select>
+
+</div>
+
+<div class="form-group full">
+
+<label>Tell me about the project</label>
+
+<textarea
+name="project"
+placeholder="Tell me about your footage, desired duration, deadline and anything else I should know..."
+required></textarea>
+
+</div>
+
+</div>
+
+<button class="btn btn-primary order-submit"
+type="submit">
+
+Send project request →
+
+</button>
+
+<p id="order-status" style="margin:12px 0 0;font-size:13px;"></p>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+<!-- ================= COMMENTS / FEEDBACK ================= -->
+
+<section class="section" id="comments">
+
+<div class="wrap">
+
+<div class="comments-layout">
+
+<div class="comments-intro">
+
+<p class="eyebrow">
+Client feedback
+</p>
+
+<h2>
+Leave a comment or project note.
+</h2>
+
+<p>
+Have feedback about an edit, a question about a project,
+or an idea you'd like to discuss? Leave a message here.
+</p>
+
+<a href="#order" class="btn btn-primary">
+Start a project →
+</a>
+
+</div>
+
+<div class="comment-box">
+
+<div id="comments-list">
+<p class="comment-note">Loading comments…</p>
+</div>
+
+<form class="comment-form" id="comment-form">
+
+<!-- honeypot -->
+<input type="text" name="website" style="position:absolute;left:-9999px" tabindex="-1" autocomplete="off">
+
+<input
+type="text"
+name="name"
+placeholder="Your name (optional)"
+style="width:100%;border:1px solid var(--line);background:#FAFAFD;border-radius:11px;padding:12px 13px;font-family:Inter,sans-serif;font-size:13px;outline:none;margin-bottom:10px;box-sizing:border-box;">
+
+<textarea
+name="comment"
+placeholder="Write your feedback or project note..."
+required></textarea>
+
+<div class="comment-actions">
+
+<span class="comment-note" id="comment-status">
+Comments are reviewed before they appear.
+</span>
+
+<button class="comment-btn" type="submit">
+Post comment
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+
+<section class="section" id="contact">
+
+<div class="wrap">
+
+<div class="contact-banner">
+
+<div>
+
+<h2>
+Have footage that needs a cut?
+</h2>
+
+<p>
+Send it over — I'll review the project and get back to you.
+</p>
+
+</div>
+
+<div class="contact-links">
+
+<a href="mailto:osairhossain03@gmail.com">
+osairhossain03@gmail.com
+</a>
+
+<a href="tel:7044900194">
+704 490 0194
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<div class="wrap">
+
+<footer>
+
+<span>
+© 2026 Osair Hossain
+</span>
+
+<div class="footer-social">
+
+<a href="#" target="_blank">
+YouTube
+</a>
+
+<a href="#" target="_blank">
+Instagram
+</a>
+
+<a href="#" target="_blank">
+LinkedIn
+</a>
+
+</div>
+
+</footer>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

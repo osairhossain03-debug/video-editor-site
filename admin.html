@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Osair Hossain</title>
+<style>
+  :root{
+    --bg:#F5F7FF; --text:#15141B; --muted:#686777; --line:#DDDCE8;
+    --violet:#7057F7; --green:#37C871; --coral:#FF6B5B;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:Inter,system-ui,sans-serif; }
+  .wrap{ max-width:960px; margin:0 auto; padding:32px 20px 80px; }
+  h1{ font-size:22px; margin:0 0 4px; }
+  .sub{ color:var(--muted); font-size:14px; margin:0 0 28px; }
+
+  #gate{ max-width:360px; margin:80px auto; text-align:center; }
+  #gate input{
+    width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px;
+    font-size:14px; margin:14px 0;
+  }
+  #gate button, .btn{
+    background:var(--violet); color:#fff; border:0; border-radius:10px;
+    padding:11px 18px; font-size:14px; font-weight:600; cursor:pointer;
+  }
+  .btn.danger{ background:var(--coral); }
+  .btn.secondary{ background:#fff; color:var(--text); border:1px solid var(--line); }
+  #gate-error{ color:var(--coral); font-size:13px; min-height:18px; }
+
+  nav.tabs{ display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+  nav.tabs button{
+    background:#fff; border:1px solid var(--line); border-radius:100px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; cursor:pointer; color:var(--muted);
+  }
+  nav.tabs button.active{ background:var(--text); color:#fff; border-color:var(--text); }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  .card{
+    background:#fff; border:1px solid var(--line); border-radius:14px;
+    padding:16px 18px; margin-bottom:12px;
+  }
+  .card .row{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; flex-wrap:wrap; }
+  .card h3{ margin:0 0 4px; font-size:15px; }
+  .card p{ margin:4px 0; font-size:13.5px; color:var(--muted); }
+  .card .meta{ font-size:12px; color:#9896A5; }
+  .badge{
+    font-size:11px; font-weight:700; padding:3px 9px; border-radius:100px;
+    background:#EEF1FF; color:var(--violet); text-transform:uppercase; letter-spacing:.03em;
+  }
+  .badge.pending{ background:#FFF1D6; color:#B8790C; }
+  .actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  .actions button{
+    font-size:12.5px; padding:7px 12px; border-radius:8px; border:1px solid var(--line);
+    background:#fff; cursor:pointer;
+  }
+  .actions button.approve{ color:var(--green); border-color:var(--green); }
+  .actions button.delete{ color:var(--coral); border-color:var(--coral); }
+
+  form.add-form{
+    background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:20px;
+  }
+  form.add-form input, form.add-form textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:9px;
+    font-size:13.5px; margin-bottom:10px; font-family:inherit;
+  }
+  form.add-form textarea{ min-height:70px; resize:vertical; }
+  .empty{ color:var(--muted); font-size:14px; padding:20px 0; }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <h1>Admin sign-in</h1>
+  <p class="sub">Enter your admin key to manage the site.</p>
+  <input type="password" id="key-input" placeholder="Admin key">
+  <button onclick="signIn()">Sign in</button>
+  <p id="gate-error"></p>
+</div>
+
+<div class="wrap" id="dashboard" style="display:none;">
+  <h1>Site admin</h1>
+  <p class="sub">Manage project requests, comments, and portfolio items.</p>
+
+  <nav class="tabs">
+    <button data-tab="submissions" class="active">Submissions</button>
+    <button data-tab="comments">Comments</button>
+    <button data-tab="portfolio">Portfolio</button>
+  </nav>
+
+  <section id="panel-submissions" class="panel active">
+    <div id="submissions-list" class="empty">Loading…</div>
+  </section>
+
+  <section id="panel-comments" class="panel">
+    <div id="comments-list" class="empty">Loading…</div>
+  </section>
+
+  <section id="panel-portfolio" class="panel">
+    <form class="add-form" id="portfolio-form">
+      <strong style="display:block;margin-bottom:10px;">Add a portfolio item</strong>
+      <input type="text" name="title" placeholder="Title" required>
+      <input type="text" name="category" placeholder="Category (e.g. YouTube · long-form)">
+      <textarea name="description" placeholder="Short description"></textarea>
+      <input type="text" name="videoUrl" placeholder="Video URL (leave blank for 'coming soon')">
+      <button type="submit" class="btn">Add item</button>
+    </form>
+    <div id="portfolio-list" class="empty">Loading…</div>
+  </section>
+</div>
+
+<script>
+  let ADMIN_KEY = '';
+
+  function signIn() {
+    const val = document.getElementById('key-input').value.trim();
+    if (!val) return;
+    ADMIN_KEY = val;
+    sessionStorage.setItem('adminKey', val);
+    checkKeyThenLoad();
+  }
+
+  async function checkKeyThenLoad() {
+    const res = await fetch('/api/submissions', { headers: { 'x-admin-key': ADMIN_KEY } });
+    if (res.status === 401) {
+      document.getElementById('gate-error').textContent = 'Incorrect admin key.';
+      sessionStorage.removeItem('adminKey');
+      return;
+    }
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadSubmissions();
+    loadComments();
+    loadPortfolio();
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = sessionStorage.getItem('adminKey');
+    if (saved) { ADMIN_KEY = saved; checkKeyThenLoad(); }
+
+    document.querySelectorAll('nav.tabs button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('nav.tabs button').forEach((b) => b.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    document.getElementById('portfolio-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      await fetch('/api/portfolio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+        body: JSON.stringify(Object.fromEntries(fd)),
+      });
+      e.target.reset();
+      loadPortfolio();
+    });
+  });
+
+  function esc(s) {
+    const d = document.createElement('div');
+    d.textContent = s == null ? '' : String(s);
+    return d.innerHTML;
+  }
+
+  // ---------- submissions ----------
+  async function loadSubmissions() {
+    const el = document.getElementById('submissions-list');
+    const res = await fetch('/api/submissions', { headers: { 'x-admin-key': ADMIN_KEY } });
+    const items = await res.json();
+    if (!items.length) { el.className = 'empty'; el.textContent = 'No project requests yet.'; return; }
+    el.className = '';
+    el.innerHTML = items.map((s) => `
+      <div class="card">
+        <div class="row">
+          <div>
+            <h3>${esc(s.name)} <span class="badge">${esc(s.status)}</span></h3>
+            <p>${esc(s.email)} — ${esc(s.service || 'No service selected')}</p>
+            <p>${esc(s.project)}</p>
+            <div class="meta">${new Date(s.createdAt).toLocaleString()}</div>
+          </div>
+          <div class="actions">
+            <button class="approve" onclick="updateSubmission(${s.id}, 'replied')">Mark replied</button>
+            <button class="delete" onclick="deleteSubmission(${s.id})">Delete</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function updateSubmission(id, status) {
+    await fetch('/api/submissions/' + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+      body: JSON.stringify({ status }),
+    });
+    loadSubmissions();
+  }
+
+  async function deleteSubmission(id) {
+    if (!confirm('Delete this submission?')) return;
+    await fetch('/api/submissions/' + id, { method: 'DELETE', headers: { 'x-admin-key': ADMIN_KEY } });
+    loadSubmissions();
+  }
+
+  // ---------- comments ----------
+  async function loadComments() {
+    const el = document.getElementById('comments-list');
+    const res = await fetch('/api/comments/all', { headers: { 'x-admin-key': ADMIN_KEY } });
+    const items = await res.json();
+    if (!items.length) { el.className = 'empty'; el.textContent = 'No comments yet.'; return; }
+    el.className = '';
+    el.innerHTML = items.map((c) => `
+      <div class="card">
+        <div class="row">
+          <div>
+            <h3>${esc(c.name)} <span class="badge ${c.approved ? '' : 'pending'}">${c.approved ? 'approved' : 'pending'}</span></h3>
+            <p>${esc(c.text)}</p>
+            <div class="meta">${new Date(c.createdAt).toLocaleString()}</div>
+          </div>
+          <div class="actions">
+            ${!c.approved ? `<button class="approve" onclick="approveComment(${c.id})">Approve</button>` : ''}
+            <button class="delete" onclick="deleteComment(${c.id})">Delete</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function approveComment(id) {
+    await fetch('/api/comments/' + id + '/approve', { method: 'POST', headers: { 'x-admin-key': ADMIN_KEY } });
+    loadComments();
+  }
+
+  async function deleteComment(id) {
+    if (!confirm('Delete this comment?')) return;
+    await fetch('/api/comments/' + id, { method: 'DELETE', headers: { 'x-admin-key': ADMIN_KEY } });
+    loadComments();
+  }
+
+  // ---------- portfolio ----------
+  async function loadPortfolio() {
+    const el = document.getElementById('portfolio-list');
+    const res = await fetch('/api/portfolio');
+    const items = await res.json();
+    if (!items.length) { el.className = 'empty'; el.textContent = 'No portfolio items yet.'; return; }
+    el.className = '';
+    el.innerHTML = items.map((p) => `
+      <div class="card">
+        <div class="row">
+          <div>
+            <h3>${esc(p.title)}</h3>
+            <p>${esc(p.category)}</p>
+            <p>${esc(p.description)}</p>
+            <div class="meta">${p.videoUrl ? esc(p.videoUrl) : 'No video URL set'}</div>
+          </div>
+          <div class="actions">
+            <button class="delete" onclick="deletePortfolio(${p.id})">Delete</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function deletePortfolio(id) {
+    if (!confirm('Delete this portfolio item?')) return;
+    await fetch('/api/portfolio/' + id, { method: 'DELETE', headers: { 'x-admin-key': ADMIN_KEY } });
+    loadPortfolio();
+  }
+</script>
+</body>
+</html>
