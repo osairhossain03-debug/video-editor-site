@@ -1,0 +1,12 @@
+{
+  "name": "osair-video-editor-site",
+  "version": "1.0.0",
+  "description": "Video editor portfolio site with a small backend for portfolio, comments, and project requests.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
